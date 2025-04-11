@@ -5,6 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Models\Project;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -40,5 +42,22 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+     public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            // Create 3 projects where this user is the creator
+            $projects = Project::factory()->count(3)->create([
+                'owner_id' => $user->id,
+            ]);
+
+            // Attach the user to each project with a pinned flag
+            foreach ($projects as $i => $project) {
+                $user->projects()->attach($project->id, [
+                    'is_pinned' => $i === 0, // pin only the first project
+                ]);
+            }
+        });
     }
 }

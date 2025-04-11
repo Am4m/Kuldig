@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'DevHub') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400,500&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <!-- Force dark mode -->
+        <script>
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        </script>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <livewire:layout.navigation />
+    <body class="font-sans antialiased text-gray-200">
+        <div class="min-h-screen bg-gray-900">
+            <livewire:layout.navigation/>
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-gray-800 shadow-md border-b border-gray-700">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

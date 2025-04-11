@@ -13,12 +13,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->text('bio')->nullable()->after('email');
+            $table->string('location')->nullable()->after('email');
+            $table->string('profile_photo_path', 2048)->nullable()->after('email');
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('follows', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('follower_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('followed_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+            $table->unique(['follower_id', 'followed_id']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -45,5 +56,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('follows');
     }
 };
