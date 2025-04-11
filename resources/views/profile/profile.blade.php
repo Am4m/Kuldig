@@ -93,16 +93,18 @@
                         <div class="px-6 py-4">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 @php
-                                    $projects = $user->projects;
+                                    $projects = $user->projects()
+                                        ->where('is_public', true)
+                                        ->orderByDesc('updated_at')
+                                        ->get();
                                 @endphp
                                 @if(isset($projects) && count($projects) > 0)
                                     @foreach($projects->take(2) as $project)
                                         <div class="bg-gray-700/30 rounded-lg p-4 hover:bg-gray-700/50 transition-colors duration-300 border border-gray-700 group hover:border-blue-500/30">
-                                            <h4 class="text-white font-medium group-hover:text-blue-400 transition-colors duration-300">{{ $project->name }}</h4>
+                                            <a href="#" class="text-blue-400 no-underline hover:underline text-xl font-bold">{{ $project->name }}</a>
                                             <p class="text-gray-400 text-sm mt-1 line-clamp-2">{{ $project->description }}</p>
                                             <div class="mt-3 flex justify-between items-center">
                                                 <span class="text-xs text-gray-500">Updated {{ $project->updated_at->diffForHumans() }}</span>
-                                                <a href="#" class="text-xs text-blue-400 hover:text-blue-300">View →</a>
                                             </div>
                                         </div>
                                     @endforeach

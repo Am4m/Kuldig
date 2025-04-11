@@ -94,6 +94,7 @@
             
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             @forelse ($projects as $project)
+                @continue(!$project->is_public && $project->user_id === auth()->id())
                 <li class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/70 transition-colors duration-300 group">
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
