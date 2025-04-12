@@ -182,31 +182,32 @@ class ProjectList extends Component
         ]);
     }
 
-    public function render()
-    {
-        $projects = Project::query()
-            ->whereHas('members', fn ($q) =>
-                $q->where('user_id', $this->user->id)
-            )
-            ->when($this->search, fn ($q) =>
-                $q->where('name', 'like', '%' . $this->search . '%')
-            )
-            ->when($this->filter !== 'all', fn ($q) =>
-                $q->where('is_public', $this->filter === 'public')
-            )
-            ->with(['members' => function($query) {
-                $query->where('user_id', $this->user->id);
-            }])
-            ->with('owner') // Make sure the owner relationship is loaded
-            ->orderByRaw("EXISTS (
-                SELECT 1 FROM project_member 
-                WHERE project_member.project_id = projects.id 
-                AND project_member.user_id = ? 
-                AND project_member.is_pinned = 1
-            ) DESC", [$this->user->id])
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->get();
+   public function render()
+{
+    $projects = Project::query()
+        ->whereHas('members', fn ($q) =>
+            $q->where('user_id', $this->user->id)
+        )
+        ->when($this->search, fn ($q) =>
+            $q->where('name', 'like', '%' . $this->search . '%')
+        )
+        ->when($this->filter !== 'all', fn ($q) =>
+            $q->where('is_public', $this->filter === 'public')
+        )
+        ->with(['members' => function ($query) {
+            $query->where('user_id', $this->user->id);
+        }])
+        ->with('owner')
+        ->orderByRaw("EXISTS (
+            SELECT 1 FROM project_member 
+            WHERE project_member.project_id = projects.id 
+            AND project_member.user_id = ? 
+            AND project_member.is_pinned = 1
+        ) DESC", [auth()->id()])
+        ->orderBy($this->sortBy, $this->sortDirection)
+        ->get();
 
-        return view('livewire.project-list', compact('projects'));
-    }
+    return view('livewire.project-list', compact('projects'));
+}
+
 }

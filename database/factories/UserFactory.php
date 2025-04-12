@@ -48,7 +48,7 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(function (User $user) {
             // Create 3 projects where this user is the creator
-            $projects = Project::factory()->count(3)->create([
+            $projects = Project::factory()->count(100)->create([
                 'owner_id' => $user->id,
             ]);
 
