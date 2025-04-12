@@ -23,7 +23,9 @@ new class extends Component
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ Auth::check() ? route('profile.dashboard', Auth::user()->name) : url('/') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75M4.5 10.5v9.75a.75.75 0 00.75.75h3.75a.75.75 0 00.75-.75v-3.75A.75.75 0 0110.5 16.5h3a.75.75 0 01.75.75v3.75a.75.75 0 00.75.75h3.75a.75.75 0 00.75-.75V10.5" />
+                        </svg>
                     </a>
                 </div>
 
@@ -60,7 +62,7 @@ new class extends Component
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile')">
+                            <x-dropdown-link :href="route('profile.dashboard', Auth::user()->name)">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 

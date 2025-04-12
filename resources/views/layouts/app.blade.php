@@ -15,11 +15,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        <!-- Force dark mode -->
-        <script>
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        </script>
     </head>
     <body class="font-sans antialiased text-gray-200">
         <div class="min-h-screen bg-gray-900">

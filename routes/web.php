@@ -15,10 +15,6 @@ Route::get('user/{name}', [ProfileController::class, 'dashboard'])->name('profil
 Route::get('user/{name}/projects', [ProjectController::class, 'indexView'])->name('projects.view');
 Route::get('user/{name}/{projectName}', [ProjectController::class, 'show'])->name('profile.project.show');
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
 require __DIR__.'/api.php';
 require __DIR__.'/auth.php';
 
