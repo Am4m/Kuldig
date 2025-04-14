@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class ProfileController extends Controller
 {
@@ -17,10 +18,12 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function edit()
+    public function indexJson(string $name): JsonResponse
     {
-        $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        $user = User::where('name', $name)->firstOrFail();
+        return response()->json([
+            'user' => $user,
+        ]);
     }
 
      public function update(Request $request)
@@ -50,22 +53,7 @@ class ProfileController extends Controller
         $user->bio = $validated['bio'] ?? null;
         $user->location = $validated['location'] ?? null;
         $user->save();
-        
-        // Update skills
-        if (isset($validated['skills'])) {
-            $user->skills()->sync($validated['skills']);
-        } else {
-            $user->skills()->detach();
-        }
-        
-        return redirect()->route('profile')->with('status', 'profile-updated');
-    }
-
-    public function activity(string $name): View
-    {
-        $user = User::where('name', $name)->firstOrFail();
-        return view('profile.activity', [
-            'user' => $user,
-        ]);
+    
+        return redirect()->route('profile.dashboard')->with('status', 'profile-updated');
     }
 }
