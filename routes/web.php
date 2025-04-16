@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::get('user/{name}', [ProfileController::class, 'dashboard'])->name('profile.dashboard');
 Route::get('user/{name}/projects', [ProjectController::class, 'indexView'])->name('projects.view');
-Route::get('user/{name}/{projectName}', [ProjectController::class, 'show'])->name('profile.project.show');
+Route::get('user/{name}/{projectName}', [ProjectController::class, 'show'])->name('project.view');
 
 require __DIR__.'/api.php';
 require __DIR__.'/auth.php';

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_public')->default(true);
             $table->timestamps();
-            
+
+            $table->unique(['owner_id', 'name']);
         });
 
          Schema::create('project_member', function (Blueprint $table) {
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->boolean('is_pinned')->default(false);
+            $table->enum('role', ['admin', 'member'])->default('member');
             $table->timestamps();
             $table->unique(['project_id', 'user_id']);
         });

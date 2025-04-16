@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
 
 class Project extends Model
 {
@@ -37,6 +38,21 @@ class Project extends Model
         $userMembership = $this->members->where('id', auth()->id())->first();
         
         return $userMembership && $userMembership->pivot->is_pinned;
+    }
+
+    public function columns()
+    {
+        return $this->hasMany(Column::class)->orderBy('position');
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(Label::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(ProjectActivity::class)->latest();
     }
 
 }

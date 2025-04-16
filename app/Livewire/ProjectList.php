@@ -103,42 +103,59 @@ class ProjectList extends Component
     }
     
     // Save project (create or update)
-    public function saveProject()
+   public function saveProject()
     {
         $this->validate();
-        
+
+        $ownerId = auth()->id();
+
         if ($this->modalMode === 'create') {
-            $project = new Project();
-            $project->owner_id = auth()->id(); // Set owner
-        } else {
-            $project = Project::findOrFail($this->projectId);
-            
-            // Check if user has permission to edit
-            if ($project->owner_id !== auth()->id()) {
-                // You might want to check for admin permissions too
-                session()->flash('error', 'You do not have permission to edit this project.');
+            // Check if project name already exists for this user
+            $exists = Project::where('owner_id', $ownerId)
+                ->where('name', $this->projectName)
+                ->exists();
+
+            if ($exists) {
+                $this->closeModal();
+                session()->flash('message', 'Project already exist !!!');
                 return;
             }
+
+            $project = new Project();
+            $project->owner_id = $ownerId;
+
+        } else {
+            $project = Project::findOrFail($this->projectId);
+
+            if ($project->owner_id !== $ownerId) {
+                session()->flash('message', 'You do not have permission to edit this project.');
+                return;
+            }
+
+            if ($project->name !== $this->projectName) {
+                $exists = Project::where('owner_id', $ownerId)
+                    ->where('name', $this->projectName)
+                    ->exists();
+
+                if ($exists) {
+                    $this->closeModal();
+                    session()->flash('message', 'You already have a project with this name.');
+                    return;
+                }
+            }
         }
-        
-        // Update project attributes
         $project->name = $this->projectName;
         $project->description = $this->projectDescription;
         $project->is_public = $this->isPublic;
         $project->save();
-        
-        // Make sure the creator is a member
+
         if ($this->modalMode === 'create') {
-            $project->members()->attach(auth()->id(), [ 'is_pinned' => false]);
+            $project->members()->attach($ownerId, ['is_pinned' => false]);
         }
-        
-        // Close modal and show success message
+
         $this->closeModal();
-        $this->dispatch('notify', [
-            'message' => $this->modalMode === 'create' ? 'Project created successfully!' : 'Project updated successfully!',
-            'type' => 'success'
-        ]);
     }
+
     
     // Open delete confirmation
     public function confirmDelete($projectId)
@@ -176,10 +193,6 @@ class ProjectList extends Component
         
         // Close confirmation and show success message
         $this->cancelDelete();
-        $this->dispatch('notify', [
-            'message' => "Project \"$projectName\" has been deleted.",
-            'type' => 'success'
-        ]);
     }
 
    public function render()

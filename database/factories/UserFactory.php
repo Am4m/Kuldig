@@ -55,6 +55,7 @@ class UserFactory extends Factory
             // Attach the user to each project with a pinned flag
             foreach ($projects as $i => $project) {
                 $user->projects()->attach($project->id, [
+                    'role' => 'admin',
                     'is_pinned' => $i === 0, // pin only the first project
                 ]);
             }

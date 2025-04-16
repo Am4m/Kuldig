@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.task-card {
+    transition: background-color 0.2s ease;
+    background-color: #1f2937;
+    /* dark base */
+    color: #f9fafb;
+    /* light text */
+}
+
+.task-card:hover {
+    background-color: #374151;
+    /* darker hover */
+}
+
+.task-column.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+}
+
+.sortable-chosen {
+    background-color: #4b5563;
+    /* highlight during drag */
+}
+
+/* Prevent click events interfering with drag events */
+.task-card .non-draggable {
+    pointer-events: none;
+}
+
+/* Re-enable click events when not dragging */
+.task-card:not(.sortable-chosen):not(.sortable-drag) .non-draggable {
+    pointer-events: all;
+}

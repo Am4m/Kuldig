@@ -99,9 +99,12 @@
                                         ->get();
                                 @endphp
                                 @if(isset($projects) && count($projects) > 0)
-                                    @foreach($projects->take(2) as $project)
+                                    @foreach($projects->take(6) as $project)
                                         <div class="bg-gray-700/30 rounded-lg p-4 hover:bg-gray-700/50 transition-colors duration-300 border border-gray-700 group hover:border-blue-500/30">
-                                            <a href="#" class="text-blue-400 no-underline hover:underline text-xl font-bold">{{ $project->name }}</a>
+                                            <a 
+                                                href="{{ route('project.view', [$project->owner->name, $project->name]) }}" 
+                                                class="text-blue-400 no-underline hover:underline text-xl font-bold">{{ $project->name }}
+                                            </a>
                                             <p class="text-gray-400 text-sm mt-1 line-clamp-2">{{ $project->description }}</p>
                                             <div class="mt-3 flex justify-between items-center">
                                                 <span class="text-xs text-gray-500">Updated {{ $project->updated_at->diffForHumans() }}</span>
@@ -117,17 +120,6 @@
                                         </div>
                                         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No projects found</h3>
                                         <p class="text-gray-500 dark:text-gray-400 max-w-sm mb-6">You don't have any projects that match your current filters. Try adjusting your search or create a new project.</p>
-                                        
-                                        @if($user->id === Auth::id())
-                                            <button 
-                                                wire:click="openCreateModal"
-                                                class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                                </svg>
-                                                Create Your First Project
-                                            </button>
-                                        @endif
                                     </div>
                                 @endif
                             </div>

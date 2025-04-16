@@ -34,68 +34,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified project.
-     */
     public function show(string $name, string $projectName): View
     {
         $user = User::where('name', $name)->firstOrFail();
         $project = $user->projects()->where('name', $projectName)->firstOrFail();
         
-        return view('profile.project-show', [
-            'user' => $user,
+        return view('project.project-show', [
             'project' => $project,
         ]);
-    }
-
-     public function create()
-    {
-        return view('projects.create');
-    }
-
-     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_public' => 'required|boolean',
-            'language' => 'nullable|string|max:100',
-        ]);
-
-        $validated['user_id'] = Auth::id();
-
-        Project::create($validated);
-
-        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
-    }
-
-    public function edit(Project $project)
-    {
-        $this->authorize('update', $project);
-        return view('projects.edit', compact('project'));
-    }
-
-    public function update(Request $request, Project $project)
-    {
-        $this->authorize('update', $project);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_public' => 'required|boolean',
-            'language' => 'nullable|string|max:100',
-        ]);
-
-        $project->update($validated);
-
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
-    }
-
-    public function destroy(Project $project)
-    {
-        $this->authorize('delete', $project);
-        $project->delete();
-
-        return redirect()->route('projects.index')->with('success', 'Project deleted.');
     }
 }
